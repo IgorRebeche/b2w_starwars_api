@@ -1,5 +1,7 @@
 package com.b2w.starwars_api.models;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,6 +11,7 @@ public class Planet {
     String id;
     String name;
     String climate;
+    String terrain;
 
     public Planet(String id, String name, String climate) {
         this.id = id;
@@ -16,7 +19,15 @@ public class Planet {
         this.climate = climate;
     }
 
-    public Planet() {}
+    public Planet(String id, String name, String climate, String terrain) {
+        this.id = id;
+        this.name = name;
+        this.climate = climate;
+        this.terrain = terrain;
+    }
+    
+    public Planet() {
+    }
 
     public String getId() {
         return id;
