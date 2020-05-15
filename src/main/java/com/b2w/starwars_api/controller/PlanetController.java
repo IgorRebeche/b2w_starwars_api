@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.b2w.starwars_api.consuming.swapi.movie.MovieResponse;
 import com.b2w.starwars_api.models.Planet;
+import com.b2w.starwars_api.responses.Response;
 import com.b2w.starwars_api.services.PlanetService;
 import com.b2w.starwars_api.services.SwapiService;
 
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @RestController
 @RequestMapping(value = "/api")
 public class PlanetController {
@@ -30,26 +30,31 @@ public class PlanetController {
     @Autowired
     private SwapiService swapiService;
 
-    @GetMapping(value="/planets/{id}")
-    public ResponseEntity<Planet> findById(@PathVariable(name = "id") String id) {
-        return ResponseEntity.ok(planetService.findById(id));
+    @GetMapping(value = "/planets/{id}")
+    public ResponseEntity<Response<Planet>> findById(@PathVariable(name = "id") String id) {
+        return ResponseEntity.ok(new Response<Planet>(planetService.findById(id)));
+    }
+
+    @GetMapping(value = "/planets")
+    public ResponseEntity<Response<List<Planet>>> list() {
+        return ResponseEntity.ok(new Response<List<Planet>>(planetService.listPlanets()));
     }
 
     @PostMapping(value = "/planets")
-    public ResponseEntity<Planet> create(@RequestBody Planet planet) {
+    public ResponseEntity<Response<Planet>>  create(@RequestBody Planet planet) {
         List<MovieResponse> movies = swapiService.fetchMoviesByPlanetName(planet.getName());
-        if (!movies.isEmpty()){
+        if (!movies.isEmpty()) {
             planet.setMovies(movies);
         }
-        return ResponseEntity.ok(planetService.createPlanet(planet));
+        return ResponseEntity.ok(new Response<Planet>(planetService.createPlanet(planet)));
     }
 
     @DeleteMapping(value = "/planets")
-    public ResponseEntity<Integer> removePlanet(@RequestParam String id){
-        planetService.removePlanet(id);
-        return ResponseEntity.ok(1);
+    public ResponseEntity<Response<Integer>> removePlanet(@RequestParam String id) {
+        if (planetService.removePlanetById(id)) {
+            return ResponseEntity.ok(new Response<Integer>(1));
+        }
+        return ResponseEntity.badRequest().body(new Response<Integer>(0));
     }
 
-
-    
 }
