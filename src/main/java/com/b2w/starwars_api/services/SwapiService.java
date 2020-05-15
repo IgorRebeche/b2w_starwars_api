@@ -19,37 +19,28 @@ import com.b2w.starwars_api.consuming.swapi.planet.PlanetResponse;
 public class SwapiService {
 
     public List<MovieResponse> fetchMoviesByPlanetName(String planetName) {
-        String URL = "https://swapi.dev" + "/api/planets/";
+        String URL = GlobalVariables.SW_API_DOMAIN + "/api/planets/?search={search}";
         List<MovieResponse> movies = new ArrayList<>();
-
-        Map<String, String> planetParams = new HashMap<String, String>();
-        planetParams.put("name", planetName);
-
         RestTemplate restTemplate = new RestTemplate();
+
         try {
-            // PlanetResponse planetResponse = restTemplate.getForObject(URL,
-            // PlanetResponse.class);
-            // ResponseEntity<PlanetResponse> res = restTemplate.getForEntity(URL,
-            // PlanetResponse.class, planetParams);
-            ResponseEntity<PlanetResponse> result = restTemplate.getForEntity(URL, PlanetResponse.class);
+
+            ResponseEntity<PlanetResponse> result = restTemplate.getForEntity(URL, PlanetResponse.class, planetName);
             List<String> filmsListUrls = result.getBody().getResults().get(0).getFilms();
 
-            if (filmsListUrls.size() > 0) {
+            if (!filmsListUrls.isEmpty()) {
                 for (String filmURL : filmsListUrls) {
-                    MovieResponse movie = restTemplate.getForObject(filmURL, MovieResponse.class);
-                    movies.add(movie);
+                    ResponseEntity<MovieResponse> movieResult = restTemplate
+                            .getForEntity(filmURL.replace("http", "https"), MovieResponse.class);
+
+                    movies.add(movieResult.getBody());
                 }
-                return movies;
             }
         } catch (RestClientException e) {
-            System.out.println("debug " + e.getMessage());
-            System.out.println("debug " + e.getLocalizedMessage());
-        }
+            System.out.println("Some Error Ocurred " + e.getMessage());
+            System.out.println("Some Error Ocurred " + e.getLocalizedMessage());
+        };
 
-        // MovieTemplate m = new MovieTemplate("title", "director", "producer",
-        // "release_date", "episode_id");
-        // movies.add(m);
-        return null;
+        return movies;
     }
-    // Caso sim, Para cada filme, realizar uma chamada e atribuir ao template
 }
