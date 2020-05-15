@@ -35,14 +35,12 @@ public class PlanetController {
         return ResponseEntity.ok(planetService.findById(id));
     }
 
-    @GetMapping(value="/test")
-    public ResponseEntity<List<MovieResponse>> test(@RequestParam String name) {
-        System.out.println(name);
-        return ResponseEntity.ok(swapiService.fetchMoviesByPlanetName(name));
-    }
-
     @PostMapping(value = "/planets")
     public ResponseEntity<Planet> create(@RequestBody Planet planet) {
+        List<MovieResponse> movies = swapiService.fetchMoviesByPlanetName(planet.getName());
+        if (!movies.isEmpty()){
+            planet.setMovies(movies);
+        }
         return ResponseEntity.ok(planetService.createPlanet(planet));
     }
 
