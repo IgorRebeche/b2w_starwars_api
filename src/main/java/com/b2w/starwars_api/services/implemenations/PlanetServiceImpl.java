@@ -22,17 +22,24 @@ public class PlanetServiceImpl implements PlanetService {
 
     @Override
     public Planet findByName(String name) {
-        return null;
+        return this.planetRepository.findByName(name).orElse(null);
     }
 
     @Override
     public Planet findById(String id) {
-            return this.planetRepository.findById(id).orElse(null);
+        return this.planetRepository.findById(id).orElse(null);
     }
 
     @Override
-    public void removePlanet(String id) {
-        this.planetRepository.deleteById(id);
+    public boolean removePlanetById(String id) {
+        try {
+            this.planetRepository.deleteById(id);
+            return true;
+            
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
     }
 
     @Override

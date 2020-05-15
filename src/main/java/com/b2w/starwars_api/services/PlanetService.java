@@ -8,7 +8,7 @@ public interface PlanetService {
     List<Planet> listPlanets();
     Planet findByName(String name);
     Planet findById(String id);
-    void removePlanet(String id);
+    boolean removePlanetById(String id);
     Planet createPlanet(Planet planet);
 
 
