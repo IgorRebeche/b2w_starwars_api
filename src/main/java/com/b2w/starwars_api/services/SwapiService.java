@@ -2,15 +2,11 @@ package com.b2w.starwars_api.services;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import com.b2w.starwars_api.GlobalVariables;
 import com.b2w.starwars_api.consuming.swapi.movie.MovieResponse;
 import com.b2w.starwars_api.consuming.swapi.planet.PlanetResponse;
