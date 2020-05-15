@@ -31,7 +31,17 @@ public class PlanetController {
     private SwapiService swapiService;
 
     @GetMapping(value = "/planets/{id}")
-    public ResponseEntity<Response<Planet>> findById(@PathVariable(name = "id") String id) {
+    public ResponseEntity<Response<Planet>> findById(@PathVariable(name = "id") String id, @RequestParam String name) {
+        Planet planet = planetService.findById(id);
+
+        if(name != null){
+            planet = planetService.findByName(name);
+        }
+
+        if(planet == null){
+            return ResponseEntity.notFound().build();
+        }
+        
         return ResponseEntity.ok(new Response<Planet>(planetService.findById(id)));
     }
 
@@ -43,17 +53,21 @@ public class PlanetController {
     @PostMapping(value = "/planets")
     public ResponseEntity<Response<Planet>>  create(@RequestBody Planet planet) {
         List<MovieResponse> movies = swapiService.fetchMoviesByPlanetName(planet.getName());
+        
         if (!movies.isEmpty()) {
             planet.setMovies(movies);
         }
+        
         return ResponseEntity.ok(new Response<Planet>(planetService.createPlanet(planet)));
     }
 
-    @DeleteMapping(value = "/planets")
-    public ResponseEntity<Response<Integer>> removePlanet(@RequestParam String id) {
+    @DeleteMapping(value = "/planets/{id}")
+    public ResponseEntity<Response<Integer>> removePlanet(@PathVariable(name = "id") String id) {
+        
         if (planetService.removePlanetById(id)) {
             return ResponseEntity.ok(new Response<Integer>(1));
         }
+        
         return ResponseEntity.badRequest().body(new Response<Integer>(0));
     }
 
