@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.assertj.core.api.Assertions.*;
@@ -53,7 +54,7 @@ public class PlanetControllerTest {
 
         when(planetService.findById(planet.getId())).thenReturn(planet);
 
-        ResponseEntity<Response<Planet>> actualList = planetController.findById(planet.getId());
+        ResponseEntity<Response<Planet>> actualList = planetController.findById(planet.getId(), null);
 
         assertThat(actualList.getBody().getData().getId()).isEqualTo(planet.getId());
     }
@@ -65,7 +66,7 @@ public class PlanetControllerTest {
         when(planetService.removePlanetById(planet.getId())).thenReturn(true);
 
         ResponseEntity<Response<Integer>> response = planetController.removePlanet(planet.getId());
-        assertThat(response.getBody().getData()).isEqualTo(1);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
     @Test
@@ -78,6 +79,6 @@ public class PlanetControllerTest {
         when(swapiService.fetchMoviesByPlanetName(planet.getName())).thenReturn(movies);
 
         ResponseEntity<Response<Planet>> response = planetController.create(planet);
-        assertThat(response.getBody().getData().getId()).isEqualTo(planet.getId());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 }

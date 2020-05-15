@@ -2,6 +2,7 @@ package com.b2w.starwars_api.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.util.List;
 
 import com.b2w.starwars_api.consuming.swapi.movie.MovieResponse;
@@ -57,15 +58,17 @@ public class PlanetController {
         if (!movies.isEmpty()) {
             planet.setMovies(movies);
         }
-        
-        return ResponseEntity.ok(new Response<Planet>(planetService.createPlanet(planet)));
+        planetService.createPlanet(planet);
+        // new Response<Planet>(planetService.createPlanet(planet))
+        URI location = URI.create(String.format("/planets/%s", planet.getName()));
+        return ResponseEntity.created(location).build();
     }
 
     @DeleteMapping(value = "/planets/{id}")
     public ResponseEntity<Response<Integer>> removePlanet(@PathVariable(name = "id") String id) {
         
         if (planetService.removePlanetById(id)) {
-            return ResponseEntity.ok(new Response<Integer>(1));
+            return ResponseEntity.noContent().build();
         }
         
         return ResponseEntity.badRequest().body(new Response<Integer>(0));
