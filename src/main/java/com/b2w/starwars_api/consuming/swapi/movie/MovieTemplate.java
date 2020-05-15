@@ -1,5 +1,7 @@
 package com.b2w.starwars_api.consuming.swapi.movie;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 public class MovieTemplate {
     private String title;
     private String director;
@@ -7,12 +9,15 @@ public class MovieTemplate {
     private String release_date;
     private String episode_id;
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public MovieTemplate(String title, String director, String producer, String release_date, String episode_id) {
         this.title = title;
         this.director = director;
         this.producer = producer;
         this.release_date = release_date;
         this.episode_id = episode_id;
+    }
+    public MovieTemplate() {
     }
     
     public String getTitle() {
