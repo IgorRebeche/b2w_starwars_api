@@ -179,7 +179,7 @@ Provide planet information.
 ```
 ## Error Responses
 
-**Condition** : If there was no Account available to delete.
+**Condition** : If planet not exists
 
 **Code** : `404 NOT FOUND`
 
@@ -187,8 +187,6 @@ Provide planet information.
 
 
 # Delete Planet
-
-Delete the Account of the Authenticated User if they are Owner.
 
 **URL** : `/api/accounts/{id}`
 
@@ -205,7 +203,7 @@ database.
 
 ## Success Response
 
-**Condition** : If the Account exists.
+**Condition** : if planet is deleted
 
 **Code** : `204 OK`
 
@@ -213,7 +211,7 @@ database.
 
 ## Error Responses
 
-**Condition** : If there was no Account available to delete.
+**Condition** : if planet is not found.
 
 **Code** : `404 NOT FOUND`
 
