@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 @RequestMapping(value = "/api")
 public class PlanetController {
@@ -30,6 +32,11 @@ public class PlanetController {
 
     @Autowired
     private SwapiService swapiService;
+
+    @GetMapping("/hello")
+    public String sayHello(HttpServletResponse response) {
+        return "hello";
+    }
 
     @GetMapping(value = "/planets/{id}")
     public ResponseEntity<Response<Planet>> findById(@PathVariable(name = "id") String id, @RequestParam String name) {
@@ -43,12 +50,12 @@ public class PlanetController {
             return ResponseEntity.notFound().build();
         }
         
-        return ResponseEntity.ok(new Response<Planet>(planetService.findById(id)));
+        return ResponseEntity.ok(new Response<>(planetService.findById(id)));
     }
 
     @GetMapping(value = "/planets")
     public ResponseEntity<Response<List<Planet>>> list() {
-        return ResponseEntity.ok(new Response<List<Planet>>(planetService.listPlanets()));
+        return ResponseEntity.ok(new Response<>(planetService.listPlanets()));
     }
 
     @PostMapping(value = "/planets")
@@ -59,7 +66,6 @@ public class PlanetController {
             planet.setMovies(movies);
         }
         planetService.createPlanet(planet);
-        // new Response<Planet>(planetService.createPlanet(planet))
         URI location = URI.create(String.format("/planets/%s", planet.getName()));
         return ResponseEntity.created(location).build();
     }
@@ -71,7 +77,7 @@ public class PlanetController {
             return ResponseEntity.noContent().build();
         }
         
-        return ResponseEntity.badRequest().body(new Response<Integer>(0));
+        return ResponseEntity.badRequest().body(new Response<>(0));
     }
 
 }
